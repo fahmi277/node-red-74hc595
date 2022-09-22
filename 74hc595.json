@@ -1,0 +1,473 @@
+[
+    {
+        "id": "46f476854799c4ba",
+        "type": "tab",
+        "label": "Addressing",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "47851bc42128d3ab",
+        "type": "rpi-gpio out",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "pin": "19",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 1140,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "662d222cc1ab9ada",
+        "type": "rpi-gpio out",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "pin": "26",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 1100,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5de01c54323da614",
+        "type": "rpi-gpio out",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "pin": "13",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 1100,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4987005f60938ca0",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "BLINK",
+        "func": "\n\nfor (let index = 1; index <= 8; index++) {\n\n\n    var select = global.get(\"v1_select\");\n\n    var status_output = false;\n\n    if(select == index){\n        status_output = true;\n    }\n\n\n    for (let index = 0; index <= 1; index++) {\n        var statusClock = global.get(\"statusClock\");\n\n        node.send({ payload: [statusClock, status_output] });\n        global.set(\"statusClock\", !statusClock);\n\n\n    }\n\n\n}\n\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 140,
+        "wires": [
+            [
+                "9e67bef439b92ff1"
+            ]
+        ]
+    },
+    {
+        "id": "e3adbe955c9d9833",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "8",
+        "payloadType": "num",
+        "x": 250,
+        "y": 140,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "9e67bef439b92ff1",
+        "type": "delay",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "2",
+        "nbRateUnits": "0.1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 750,
+        "y": 140,
+        "wires": [
+            [
+                "857001ef6f4cf8fa",
+                "0972b0f730151d18",
+                "fcbb78be23936db4"
+            ]
+        ]
+    },
+    {
+        "id": "857001ef6f4cf8fa",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "v1 data",
+        "func": "var data =  msg.payload;\n\nmsg.payload = data[1];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 140,
+        "wires": [
+            [
+                "5de01c54323da614"
+            ]
+        ]
+    },
+    {
+        "id": "0972b0f730151d18",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "v1 clock",
+        "func": "var data =  msg.payload;\n\nmsg.payload = data[0];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 220,
+        "wires": [
+            [
+                "662d222cc1ab9ada"
+            ]
+        ]
+    },
+    {
+        "id": "4b111d567baa712d",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "setup variabel",
+        "func": "\nvar data =  msg.payload;\n\nglobal.set(\"v1_select\", data);\nglobal.set(\"v1_show\", false);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nglobal.set(\"v1_show\", false);\nglobal.set(\"v1_count\", 0);",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "4987005f60938ca0"
+            ]
+        ]
+    },
+    {
+        "id": "39945b710e602f33",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "7",
+        "payloadType": "num",
+        "x": 250,
+        "y": 180,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "c436916e83f40b96",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "pulse every x seconds",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 850,
+        "y": 440,
+        "wires": [
+            [
+                "3bb37f9cc10c0ecd"
+            ]
+        ]
+    },
+    {
+        "id": "3bb37f9cc10c0ecd",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "v1 clock",
+        "func": "var data = global.get(\"v1_show\");\n\nmsg.payload = data;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 440,
+        "wires": [
+            [
+                "47851bc42128d3ab"
+            ]
+        ]
+    },
+    {
+        "id": "fcbb78be23936db4",
+        "type": "function",
+        "z": "46f476854799c4ba",
+        "name": "v1 clock",
+        "func": "var data = global.get(\"v1_count\");\n\n\nglobal.set(\"v1_count\",data+1);\n\nif(data == 15){\n    global.set(\"v1_show\",true);\n    global.set(\"v1_count\", 0);\n}\n\n\nmsg.payload = data;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 300,
+        "wires": [
+            [
+                "9a44020be4ce51ef"
+            ]
+        ]
+    },
+    {
+        "id": "9a44020be4ce51ef",
+        "type": "debug",
+        "z": "46f476854799c4ba",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1140,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "6800740ead18407c",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "6",
+        "payloadType": "num",
+        "x": 250,
+        "y": 220,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "e85d98ed078e23a1",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "5",
+        "payloadType": "num",
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "1483197d87045862",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "4",
+        "payloadType": "num",
+        "x": 250,
+        "y": 300,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "5874228796fe32f8",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "3",
+        "payloadType": "num",
+        "x": 250,
+        "y": 340,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "83c9f0a4e48bb9d4",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "2",
+        "payloadType": "num",
+        "x": 250,
+        "y": 380,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    },
+    {
+        "id": "bda7917790ce5f3c",
+        "type": "inject",
+        "z": "46f476854799c4ba",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 250,
+        "y": 420,
+        "wires": [
+            [
+                "4b111d567baa712d"
+            ]
+        ]
+    }
+]
